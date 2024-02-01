@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate, useParams, useNavigate } from "react-router-dom";
 
 import "./App.css";
 import Note from "./components/Note";
@@ -12,7 +12,7 @@ import Note from "./components/Note";
 function App() {
   // déclarer l'état pour stocker les notes
   const [notes, setNotes] = useState(null);
-
+  const navigate = useNavigate();
   // Fonction pour récupérer les notes
   async function fetchNotes() {
 
@@ -71,7 +71,7 @@ function App() {
       console.log("Creating");
 
       // Naviguer vers la nouvelle note
-      Navigate(`/notes/${newNote.id}`);
+      navigate(`/notes/${newNote.id}`);
     } catch (error) {
       console.log(error);
     }
