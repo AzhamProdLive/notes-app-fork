@@ -2,6 +2,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./Note.css";
 import { useEffect, useState } from "react";
 
+async function fetchData(url, options = {}) {
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        // Set error state here
+    }
+}
+
 function Note() {
     const { id } = useParams();
     const [note, setNote] = useState(null);
@@ -24,7 +38,7 @@ function Note() {
     const saveNote = async (event) => {
         event.preventDefault();
 
-        const response = await fetch(`http://localhost:3000/notes/${id}`, {
+        await fetchData(`http://localhost:3000/notes/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,17 +46,12 @@ function Note() {
             body: JSON.stringify(note),
         });
 
-        if (response.ok) {
-            await fetchNote();
-            navigate('/'); // or wherever you want to redirect the user after saving
-        } else {
-            console.error('Failed to save note');
-        }
+        fetchNote();
+        navigate('/'); // or wherever you want to redirect the user after saving
     };
 
     async function fetchNote() {
-        const response = await fetch(`http://localhost:3000/notes/${id}`);
-        const data = await response.json();
+        const data = await fetchData(`http://localhost:3000/notes/${id}`);
         setNote(data);
     }
 
