@@ -1,9 +1,14 @@
 {
   "notes": [
     {
-      "title": "sdfsdfsfdsdf",
-      "content": "sdfsdf",
-      "id": "1"
+      "title": "Test",
+      "content": "TEST",
+      "id": 1
+    },
+    {
+      "title": "Bonjour",
+      "content": "Ceci est une note",
+      "id": 3
     }
   ],
   "profile": {
