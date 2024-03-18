@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import "./Note.css";
 import { useEffect, useState } from "react";
+import { useContext } from 'react';
+import { noteContext } from './noteContext';
+
 
 async function fetchData(url, options = {}) {
     try {
@@ -20,6 +23,7 @@ function Note() {
     const { id } = useParams();
     const [note, setNote] = useState(null);
     const navigate = useNavigate();
+    const { fetchNotes } = useContext(noteContext);
 
     const handleTitleChange = (event) => {
         setNote(prevNote => ({
@@ -46,7 +50,7 @@ function Note() {
             body: JSON.stringify(note),
         });
 
-        fetchNote();
+        fetchNotes();
         navigate('/'); // or wherever you want to redirect the user after saving
     };
 
