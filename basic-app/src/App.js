@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import "./App.css";
 import Note from "./components/Note";
-import { noteProvider } from './noteProvider';
 
 function App() {
   // déclarer l'état pour stocker les notes
@@ -15,7 +14,7 @@ function App() {
     try {
       const data = await response.json();
       setNotes(data);
-      console.log("Fetching")
+      console.log("Fetching...")
     } catch (error) {
       console.log(error);
     }
@@ -45,7 +44,7 @@ function App() {
         headers: { "Content-type": "application/json" },
       });
       fetchNotes();
-      console.log("Deleting")
+      console.log("Deleting...")
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +76,6 @@ function App() {
   }, []);
 
   return (
-      <notesProvider>
         <BrowserRouter>
           <aside className="Side">
             <div>
@@ -110,15 +108,12 @@ function App() {
           </aside>
           <main className="Main">
             <Routes>
-
-              <Route path="/" element="Sélectionner une note" />
+              <Route path="/" element={<div>Sélectionner une note</div>} />
               <Route path="/notes/:id" element={<Note />} />
-
-              <Route path="*" element={<Navigate to="/" />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
             </Routes>
           </main>
         </BrowserRouter>
-      </notesProvider>
   );
 }
 

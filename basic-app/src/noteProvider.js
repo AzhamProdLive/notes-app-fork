@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NoteContext from './NoteContext';
+import noteContext from './components/noteContext';
 import { fetchNotes } from './api';
 
 export function NoteProvider({ children }) {
@@ -17,8 +17,8 @@ export function NoteProvider({ children }) {
     };
 
     return (
-        <NoteContext.Provider value={{ notes, fetchNotes: fetchNotesFromServer }}>
+        <noteContext.Provider value={{ fetchNotes: fetchNotesFromServer }}>
             {children}
-        </NoteContext.Provider>
+        </noteContext.Provider>
     );
 }
