@@ -1,47 +1,74 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link, Navigate, useParams, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import "./App.css";
 import Note from "./components/Note";
 
-async function fetchData(url, options = {}) {
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${url}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    // Set error state here
-  }
-}
-
 function App() {
+  // déclarer l'état pour stocker les notes
   const [notes, setNotes] = useState(null);
-  const navigate = useNavigate();
 
+  // Fonction pour récupérer les notes
   async function fetchNotes() {
-    const data = await fetchData("http://localhost:3000/notes");
-    setNotes(data);
+
+    const response = await fetch("http://localhost:3000/notes");
+    try {
+      const data = await response.json();
+      setNotes(data);
+      console.log("Fetching")
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
-  async function deleteNote(noteId) {
-    await fetchData(`http://localhost:3000/notes/${noteId}`, {
-      method: "DELETE",
-      headers: { "Content-type": "application/json" },
-    });
-    fetchNotes();
+  // Fonction pour récupérer une note avec son id
+  async function fetchNoteById(noteId) {
+
+    const response = await fetch(`http://localhost:3000/notes/${noteId}`);
+    try {
+      const data = await response.json();
+      setNotes(data);
+      console.log("Fetching id" + noteId)
+    } catch (error) {
+      console.log(error);
+
+    }
+
   }
+
+  // Fonction pour supprimer une note
+  async function deleteNote(noteId) {
+    try {
+      await fetch(`http://localhost:3000/notes/${noteId}`, {
+        method: "DELETE",
+        headers: { "Content-type": "application/json" },
+      });
+      fetchNotes();
+      console.log("Deleting")
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Fonction pour créer une note
 
   async function createNote() {
-    const newNote = await fetchData("http://localhost:3000/notes", {
-      method: "POST",
-      body: JSON.stringify({ title: "Nouvelle note", content: "" }),
-      headers: { "Content-type": "application/json" },
-    });
-    fetchNotes();
-    navigate(`/notes/${newNote.id}`);
+    try {
+      const response = await fetch("http://localhost:3000/notes", {
+        method: "POST",
+        body: JSON.stringify({ title: "Nouvelle note", content: "" }),
+        headers: { "Content-type": "application/json" },
+      });
+
+      const newNote = await response.json(); // Assurez-vous que cette réponse contient l'ID de la nouvelle note
+      fetchNotes();
+      console.log("Creating");
+
+      // Naviguer vers la nouvelle note
+      Navigate(`/notes/${newNote.id}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(function () {
@@ -81,8 +108,10 @@ function App() {
         </aside>
         <main className="Main">
           <Routes>
+
             <Route path="/" element="Sélectionner une note" />
             <Route path="/notes/:id" element={<Note />} />
+
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>

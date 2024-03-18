@@ -9,6 +9,11 @@
       "title": "Bonjour",
       "content": "Ceci est une note",
       "id": 3
+    },
+    {
+      "title": "Test",
+      "content": "Test\n",
+      "id": 4
     }
   ],
   "profile": {
